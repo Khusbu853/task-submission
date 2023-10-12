@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #svg-container {
+      width: 450px;
+      height: 450px;
+      margin: auto;
+    }
+    
+    .grid-square {
+      fill: white;
+      stroke: black;
+      stroke-width: 2;
+    }
+    .highlighted {
+      fill: lightblue;
+    }
+
+    .main{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
+    }
+
+    #input-dimension {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #draw-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #0074d9; 
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    p{
+        text-align: center;
+        font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div class="main">
+        <input type="number" id="input-dimension" placeholder="Enter dimension (e.g., 3)">
+        <button id="draw-button">Draw Grid</button>
+      </div>
+      <div id="svg-container"></div>
+      <p id="coordinates"></p> 
+      <script>
+        
+        drawGrid(1);
+      
+        document.getElementById("draw-button").addEventListener("click", function () {
+          const dimension = parseInt(document.getElementById("input-dimension").value);
+      
+         
+          if (!isNaN(dimension)) {
+            drawGrid(dimension);
+          }
+        });
+      
+        function drawGrid(dimension) {
+          const container = document.getElementById("svg-container");
+          const svgNS = "http://www.w3.org/2000/svg";
+          const svg = document.createElementNS(svgNS, "svg");
+          svg.setAttribute("width", "100%");
+          svg.setAttribute("height", "100%");
+      
+          const gridSize = dimension * dimension;
+          const squareSize = 450 / dimension;
+      
+          for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+              const square = document.createElementNS(svgNS, "rect");
+              square.setAttribute("class", "grid-square");
+              square.setAttribute("width", squareSize);
+              square.setAttribute("height", squareSize);
+              square.setAttribute("x", i * squareSize);
+              square.setAttribute("y", j * squareSize);
+              square.addEventListener("click", highlightSquare);
+              svg.appendChild(square);
+            }
+          }
+      
+          container.innerHTML = "";
+          container.appendChild(svg);
+      
+          function highlightSquare(event) {
+            const clickedSquare = event.target;
+            const x = parseInt(clickedSquare.getAttribute("x") / squareSize);
+            const y = parseInt(clickedSquare.getAttribute("y") / squareSize);
+            const coordinatesElement = document.getElementById("coordinates"); 
+            coordinatesElement.textContent = `Coordinates: (${x}, ${y})`; 
+      
+            const squares = document.querySelectorAll(".grid-square");
+            squares.forEach((square) => square.classList.remove("highlighted"));
+            clickedSquare.classList.add("highlighted");
+          }
+        }
+      </script>
+      
+      
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
